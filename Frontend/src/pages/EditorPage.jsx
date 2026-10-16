@@ -187,13 +187,9 @@ export default function EditorPage({ session, onLogout }) {
 
             {failed && (
               <div className="ai-box">
-                {user ? (
-                  <button className="btn btn-ai" onClick={handleExplain} disabled={explaining}>
-                    {explaining ? 'Thinking...' : 'Explain this error with AI'}
-                  </button>
-                ) : (
-                  <p className="muted small">Sign in with Google to get an AI explanation of this error.</p>
-                )}
+                <button className="btn btn-ai" onClick={handleExplain} disabled={explaining}>
+                  {explaining ? 'Thinking...' : 'Explain this error with AI'}
+                </button>
                 {explanation && (
                   <div className="ai-answer">
                     <p className="small muted">AI suggestion. It can be wrong, so check it against the error.</p>

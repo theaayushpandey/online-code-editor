@@ -36,7 +36,7 @@ export default function Login({ error, onGoogleLogin, onGuest }) {
           Continue as guest
         </button>
         <p className="muted small">
-          Guests can run code. Sign in to unlock the AI error explainer.
+          Guests can run code and use the AI error explainer.
         </p>
       </div>
     </div>

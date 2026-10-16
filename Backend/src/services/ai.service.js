@@ -8,25 +8,40 @@ Reply in plain text, under 120 words:
 3. Give one hint towards the fix.
 Do not rewrite the whole program for the student.`
 
-export async function explainWithGemini({ code, language, error }) {
-  const res = await fetch(
+// A busy model can take minutes; the student would rather see "try again" than wait
+const TIMEOUT_MS = 30_000
+
+function callGemini(body) {
+  return fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: TUTOR_INSTRUCTIONS }] },
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: `Language: ${language}\n\nCode:\n${code}\n\nError:\n${error}` }],
-          },
-        ],
-        // Low temperature: we want the same careful answer every time, not creativity
-        generationConfig: { temperature: 0.2, maxOutputTokens: 1000 },
-      }),
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     },
   )
+}
+
+export async function explainWithGemini({ code, language, error }) {
+  const body = {
+    system_instruction: { parts: [{ text: TUTOR_INSTRUCTIONS }] },
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: `Language: ${language}\n\nCode:\n${code}\n\nError:\n${error}` }],
+      },
+    ],
+    // Low temperature: we want the same careful answer every time, not creativity
+    generationConfig: { temperature: 0.2, maxOutputTokens: 1000 },
+  }
+
+  let res = await callGemini(body)
+  // 503 means the model is briefly overloaded; one retry usually gets through
+  if (res.status === 503) {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    res = await callGemini(body)
+  }
   if (!res.ok) {
     throw new Error(`Gemini request failed (HTTP ${res.status})`)
   }
