@@ -1,13 +1,13 @@
 # CodeRun: Online Code Editor
 
-Write and run code in 12 languages in the browser. Sign in with Google to get an AI explanation when your code fails.
+Write and run code in 12 languages in the browser. Get an AI explanation from Gemini when your code fails.
 
 ## Features
 
 - Monaco editor (the editor inside VS Code) with syntax highlighting and auto-completion
 - 12 languages: C++, C, Python, Java, JavaScript, TypeScript, Go, Rust, Kotlin, C#, PHP, Ruby
 - Custom input (stdin), output, compile and runtime errors, run time and memory
-- Google sign-in, with a guest mode that can still run code
+- Google sign-in (optional): guests can run code and use the AI explainer too
 - "Explain this error with AI": sends the failing code and the error to Gemini and shows a short hint
 - Your code is saved per language in the browser, so a refresh does not lose it
 - Rate limits and size limits on the server
