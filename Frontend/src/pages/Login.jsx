@@ -1,5 +1,5 @@
 import { GoogleLogin } from '@react-oauth/google'
-import { GOOGLE_CLIENT_ID } from './config.js'
+import { GOOGLE_CLIENT_ID } from '../config.js'
 
 export default function Login({ error, onGoogleLogin, onGuest }) {
   return (
@@ -24,7 +24,7 @@ export default function Login({ error, onGoogleLogin, onGuest }) {
           </div>
         ) : (
           <p className="notice">
-            Google sign-in is not set up yet. Add VITE_GOOGLE_CLIENT_ID to client/.env.
+            Google sign-in is not set up yet. Add VITE_GOOGLE_CLIENT_ID to Frontend/.env.
           </p>
         )}
 
