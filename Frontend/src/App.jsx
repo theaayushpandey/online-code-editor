@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { googleLogout } from '@react-oauth/google'
-import Login from './Login.jsx'
-import EditorPage from './EditorPage.jsx'
-import { getMe } from './api.js'
+import Login from './pages/Login.jsx'
+import EditorPage from './pages/EditorPage.jsx'
+import { getMe } from './services/api.js'
 
 const TOKEN_KEY = 'coderun.token'
 

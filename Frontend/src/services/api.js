@@ -1,5 +1,5 @@
 // Every call from the page to the Express server goes through this file.
-import { API_URL } from './config.js'
+import { API_URL } from '../config.js'
 
 async function request(path, { method = 'GET', body, token } = {}) {
   const headers = {}

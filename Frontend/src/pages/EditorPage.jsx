@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Editor from '@monaco-editor/react'
-import { explainError, getLanguages, runCode } from './api.js'
+import { explainError, getLanguages, runCode } from '../services/api.js'
 
 const ACCEPTED = 3 // Judge0 status id for a run that finished without errors
 const savedCodeKey = languageId => `coderun.code.${languageId}`

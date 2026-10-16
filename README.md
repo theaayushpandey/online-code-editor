@@ -27,14 +27,41 @@ JSON result back to the browser
 
 The browser never talks to Judge0 or Gemini directly. All API keys stay on the server.
 
-| File | What it does |
-| --- | --- |
-| `server/index.js` | The whole backend: auth check, rate limits, Judge0 call, Gemini call, routes |
-| `server/languages.js` | The language list: Judge0 id, Monaco name, starter code |
-| `client/src/api.js` | Every request from the page to the server |
-| `client/src/App.jsx` | Decides between the login page and the editor; keeps the session |
-| `client/src/Login.jsx` | Google button and "Continue as guest" |
-| `client/src/EditorPage.jsx` | Editor, language picker, input, output, AI explanation |
+## Folder structure
+
+```
+online-code-editor/
+├── Backend/                         Express API (Node.js)
+│   ├── server.js                    starts the server
+│   └── src/
+│       ├── app.js                   Express app: CORS, JSON, mounts the routes
+│       ├── config/
+│       │   ├── env.js               every setting read from .env
+│       │   └── languages.js         language list: Judge0 id, Monaco name, starter code
+│       ├── middlewares/
+│       │   ├── auth.middleware.js   checks the Google sign-in token
+│       │   └── rateLimit.middleware.js
+│       ├── routes/                  URL -> controller
+│       │   ├── auth.routes.js       GET  /api/me
+│       │   ├── code.routes.js       GET  /api/languages, POST /api/run
+│       │   └── ai.routes.js         POST /api/explain
+│       ├── controllers/             checks the request, calls a service, sends the answer
+│       │   ├── auth.controller.js
+│       │   ├── code.controller.js
+│       │   └── ai.controller.js
+│       └── services/                talks to outside APIs
+│           ├── judge0.service.js    compiles and runs the code
+│           └── ai.service.js        AI integration: Gemini error explainer
+└── Frontend/                        React + Vite page
+    └── src/
+        ├── main.jsx, App.jsx        entry; App picks the login page or the editor
+        ├── config.js                API URL and Google client ID from .env
+        ├── pages/
+        │   ├── Login.jsx            Google button and "Continue as guest"
+        │   └── EditorPage.jsx       editor, language picker, input, output, AI explanation
+        └── services/
+            └── api.js               every request from the page to the server
+```
 
 ## Run it locally
 
@@ -43,7 +70,7 @@ You need Node.js 18 or newer. Open two terminals.
 Terminal 1, the server:
 
 ```bash
-cd server
+cd Backend
 npm install
 copy .env.example .env
 npm run dev
@@ -52,7 +79,7 @@ npm run dev
 Terminal 2, the page:
 
 ```bash
-cd client
+cd Frontend
 npm install
 copy .env.example .env
 npm run dev
@@ -65,13 +92,13 @@ Open http://localhost:5173. Running code works straight away as a guest.
 1. Go to Google Cloud Console, then APIs & Services, then Credentials.
 2. Create an OAuth client ID of type "Web application".
 3. Under "Authorised JavaScript origins" add `http://localhost:5173`.
-4. Put the client ID in both `server/.env` (`GOOGLE_CLIENT_ID`) and `client/.env` (`VITE_GOOGLE_CLIENT_ID`).
+4. Put the client ID in both `Backend/.env` (`GOOGLE_CLIENT_ID`) and `Frontend/.env` (`VITE_GOOGLE_CLIENT_ID`).
 5. Restart both terminals.
 
 ## Turn on the AI explainer
 
 1. Create an API key in Google AI Studio.
-2. Put it in `server/.env` as `GEMINI_API_KEY`.
+2. Put it in `Backend/.env` as `GEMINI_API_KEY`.
 3. Restart the server. If the model name in `GEMINI_MODEL` is no longer offered, change it to a current one.
 
 ## Known limitations
